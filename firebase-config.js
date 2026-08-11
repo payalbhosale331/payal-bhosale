@@ -1,4 +1,3 @@
-```javascript
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
 import { getDatabase } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-database.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
@@ -20,4 +19,4 @@ const auth = getAuth(app);
 const database = getDatabase(app);
 
 export { app, auth, database };
-```
+
