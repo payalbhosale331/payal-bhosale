@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard - AI Resume Screening System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #222;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: #1e3a8a;
+            color: white;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            font-size: 21px;
+        }
+
+        .logout {
+            background: #dc2626;
+            color: white;
+            text-decoration: none;
+            padding: 9px 18px;
+            border-radius: 6px;
+        }
+
+        /* Main */
+        .container {
+            padding: 45px 6%;
+        }
+
+        .welcome {
+            margin-bottom: 35px;
+        }
+
+        .welcome h1 {
+            color: #1e3a8a;
+            margin-bottom: 10px;
+        }
+
+        .welcome p {
+            color: #666;
+        }
+
+        /* Cards */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-radius: 12px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+        }
+
+        .icon {
+            font-size: 45px;
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            color: #1e3a8a;
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #1e3a8a;
+            color: white;
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+        }
+
+        .btn:hover {
+            background: #2563eb;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 60px;
+            background: #1e3a8a;
+            color: white;
+            text-align: center;
+            padding: 18px;
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .container {
+                padding: 30px 5%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+
+        <h2>🤖 AI Resume Screening System</h2>
+
+        <a href="index.html" class="logout">
+            Logout
+        </a>
+
+    </div>
+
+
+    <!-- Dashboard -->
+    <div class="container">
+
+        <div class="welcome">
+
+            <h1>Welcome to Dashboard</h1>
+
+            <p>
+                Manage your resume screening activities from here.
+            </p>
+
+        </div>
+
+
+        <div class="cards">
+
+            <!-- Resume Upload -->
+            <div class="card">
+
+                <div class="icon">📄</div>
+
+                <h3>Upload Resume</h3>
+
+                <p>
+                    Upload candidate resume for screening.
+                </p>
+
+                <a href="upload.html" class="btn">
+                    Upload Resume
+                </a>
+
+            </div>
+
+
+            <!-- AI Analysis -->
+            <div class="card">
+
+                <div class="icon">🤖</div>
+
+                <h3>AI Analysis</h3>
+
+                <p>
+                    Analyze resume and check job matching score.
+                </p>
+
+                <a href="result.html" class="btn">
+                    AI Analysis
+                </a>
+
+            </div>
+
+
+            <!-- Candidates -->
+            <div class="card">
+
+                <div class="icon">👥</div>
+
+                <h3>Candidates</h3>
+
+                <p>
+                    View candidate information and ranking.
+                </p>
+
+                <a href="candidates.html" class="btn">
+                    Candidates
+                </a>
+
+            </div>
+
+
+            <!-- Profile -->
+            <div class="card">
+
+                <div class="icon">👤</div>
+
+                <h3>Profile</h3>
+
+                <p>
+                    View your profile information.
+                </p>
+
+                <a href="profile.html" class="btn">
+                    Profile
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Footer -->
+    <footer>
+
+        <p>
+            © 2026 AI Resume Screening System
+            | Developed by Payal Bhosale
+            |College AGCE
+        </p>
+
+    </footer>
+
+</body>
+</html>
