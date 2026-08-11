@@ -59,6 +59,57 @@ button{ width:100%; margin-top:25px; padding:14px; background:#0d6efd; color:whi
 
 </form>
 
+</div> 
+  <button type="submit">📤 Analyze Resume</button>
+
+</form>
+
 </div>
+
+<script type="module">
+
+import { db } from "./firebase-config.js";
+
+import {
+  collection,
+  addDoc
+} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+
+const form = document.getElementById("resumeForm");
+
+form.addEventListener("submit", async (e) => {
+
+    e.preventDefault();
+
+    const data = {
+        name: form.name.value,
+        email: form.email.value,
+        job_role: form.job_role.value,
+        skills: form.skills.value,
+        job_description: form.job_description.value,
+        resume: form.resume.files[0] ? form.resume.files[0].name : "Not Uploaded",
+        createdAt: new Date()
+    };
+
+    try {
+
+        await addDoc(collection(db, "resumes"), data);
+
+        alert("Resume Details Saved Successfully!");
+
+        window.location.href = "result.html";
+
+    } catch (err) {
+
+        alert("Error : " + err.message);
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
 </body>
 </html>
