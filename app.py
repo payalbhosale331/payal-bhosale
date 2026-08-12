@@ -80,7 +80,18 @@ def logout():
     flash("Logout Successful")
 
     return redirect("/login")
+    
+# ----------------------------------------------------   
+# Candidates Page
+# ----------------------------------------------------
 
+@app.route("/candidates", methods=["GET"])
+def candidates():
+
+    if "user" not in session:
+        return redirect("/login")
+
+    return render_template("candidates.html")
 
 # --------------------------------------------------
 # Firebase Test Route
