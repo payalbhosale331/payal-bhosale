@@ -72,7 +72,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 700px;
+            min-width: 800px;
         }
 
         th {
@@ -85,6 +85,7 @@
         td {
             padding: 14px;
             border-bottom: 1px solid #ddd;
+            vertical-align: middle;
         }
 
         tr:hover {
@@ -105,10 +106,22 @@
             text-decoration: none;
             padding: 7px 12px;
             border-radius: 5px;
+            display: inline-block;
         }
 
         .view-btn:hover {
             background: #2563eb;
+        }
+
+        .message {
+            text-align: center;
+            padding: 25px;
+            color: #666;
+            font-size: 16px;
+        }
+
+        .error {
+            color: #dc2626;
         }
 
         footer {
@@ -125,6 +138,15 @@
                 gap: 15px;
                 text-align: center;
             }
+
+            .container {
+                margin: 20px auto;
+                padding: 10px;
+            }
+
+            .table-box {
+                padding: 10px;
+            }
         }
     </style>
 </head>
@@ -136,7 +158,7 @@
 
         <h2>🤖 AI Resume Screening System</h2>
 
-        <a href="/dashboard" class="back-btn">
+        <a href="dashboard.html" class="back-btn">
             Dashboard
         </a>
 
@@ -151,7 +173,7 @@
             <h1>Candidates List</h1>
 
             <p>
-                View screened candidates and their AI matching scores.
+                View all resumes submitted in the AI Resume Screening System.
             </p>
 
         </div>
@@ -162,62 +184,22 @@
             <table>
 
                 <thead>
-
                     <tr>
                         <th>Sr. No.</th>
-                        <th>Candidates Name</th>
+                        <th>Candidate Name</th>
                         <th>Email</th>
                         <th>Skills</th>
+                        <th>Job Role</th>
                         <th>Match Score</th>
                         <th>Action</th>
                     </tr>
-
                 </thead>
 
-                <tbody>
+                <tbody id="candidateTable">
 
                     <tr>
-                        <td>1</td>
-                        <td>Rahul Patil</td>
-                        <td>rahul@example.com</td>
-                        <td>Python, Java</td>
-                        <td>
-                            <span class="score">92%</span>
-                        </td>
-                        <td>
-                            <a href="/result" class="view-btn">
-                                View
-                            </a>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>2</td>
-                        <td>Priya Sharma</td>
-                        <td>priya@example.com</td>
-                        <td>Java, HTML, CSS</td>
-                        <td>
-                            <span class="score">87%</span>
-                        </td>
-                        <td>
-                            <a href="result.html" class="view-btn">
-                                View
-                            </a>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>3</td>
-                        <td>Amit Joshi</td>
-                        <td>amit@example.com</td>
-                        <td>Python, SQL</td>
-                        <td>
-                            <span class="score">81%</span>
-                        </td>
-                        <td>
-                            <a href="result.html" class="view-btn">
-                                View
-                            </a>
+                        <td colspan="7" class="message">
+                            Loading candidates...
                         </td>
                     </tr>
 
@@ -235,11 +217,203 @@
 
         <p>
             © 2026 AI Resume Screening System |
-            Developed by Payal Bhosale
-            College Name AGCE
+            Developed by Payal Bhosale |
+            AGCE Polytechnic, Satara
         </p>
 
     </footer>
 
+
+    <!-- Firebase -->
+    <script type="module">
+
+        import { db } from "./firebase-config.js";
+
+        import {
+            collection,
+            getDocs
+        } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+
+
+        // Table body
+        const table = document.getElementById("candidateTable");
+
+
+        // Load candidates from Firestore
+        async function loadCandidates() {
+
+            try {
+
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="message">
+                            Loading candidates...
+                        </td>
+                    </tr>
+                `;
+
+
+                // Get resumes collection
+                const snapshot = await getDocs(
+                    collection(db, "resumes")
+                );
+
+
+                // No candidates
+                if (snapshot.empty) {
+
+                    table.innerHTML = `
+                        <tr>
+                            <td colspan="7" class="message">
+                                No candidates found in Firestore.
+                            </td>
+                        </tr>
+                    `;
+
+                    return;
+                }
+
+
+                table.innerHTML = "";
+
+                let sr = 1;
+
+
+                snapshot.forEach((doc) => {
+
+                    const data = doc.data();
+
+
+                    // Candidate information
+                    const name =
+                        data.name ||
+                        data.fullName ||
+                        "N/A";
+
+
+                    const email =
+                        data.email ||
+                        "N/A";
+
+
+                    const skills =
+                        data.skills ||
+                        "N/A";
+
+
+                    const jobRole =
+                        data.job_role ||
+                        data.jobRole ||
+                        "N/A";
+
+
+                    // Match score
+                    let matchScore =
+                        data.matchScore ??
+                        data.match_score ??
+                        data.score ??
+                        0;
+
+
+                    // If score is decimal like 0.90
+                    if (
+                        typeof matchScore === "number" &&
+                        matchScore <= 1
+                    ) {
+                        matchScore = Math.round(
+                            matchScore * 100
+                        );
+                    }
+
+
+                    // If score is string
+                    if (typeof matchScore === "string") {
+
+                        matchScore =
+                            matchScore.replace("%", "");
+
+                    }
+
+
+                    // Create row
+                    const row = document.createElement("tr");
+
+
+                    row.innerHTML = `
+
+                        <td>${sr++}</td>
+
+                        <td>${escapeHTML(name)}</td>
+
+                        <td>${escapeHTML(email)}</td>
+
+                        <td>${escapeHTML(skills)}</td>
+
+                        <td>${escapeHTML(jobRole)}</td>
+
+                        <td>
+                            <span class="score">
+                                ${escapeHTML(String(matchScore))}%
+                            </span>
+                        </td>
+
+                        <td>
+                            <a
+                                href="result.html?id=${encodeURIComponent(doc.id)}"
+                                class="view-btn"
+                            >
+                                View
+                            </a>
+                        </td>
+
+                    `;
+
+
+                    table.appendChild(row);
+
+                });
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error loading candidates:",
+                    error
+                );
+
+
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="message error">
+                            Failed to load candidates.
+                            <br><br>
+                            ${escapeHTML(error.message)}
+                        </td>
+                    </tr>
+                `;
+
+            }
+
+        }
+
+
+        // Prevent HTML injection
+        function escapeHTML(value) {
+
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
+        }
+
+
+        // Load data after page is ready
+        loadCandidates();
+
+    </script>
+
 </body>
-  </html>
+</html>
