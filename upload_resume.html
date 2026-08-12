@@ -1,115 +1,492 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<title>Upload Resume | AI Resume Screening System</title>
-<style>
-body{ margin:0; font-family:Arial; background:#eef3f8; }
-nav{ background:#0d6efd; color:white; display:flex; justify-content:space-between; padding:15px 50px; }
-nav a{ color:white; text-decoration:none; font-weight:bold; margin-left:20px; }
-.upload-container{ width:650px; margin:50px auto; background:white; padding:35px; border-radius:12px; box-shadow:0 8px 20px rgba(0,0,0,.15); }
-h1{ text-align:center; color:#0d6efd; }
-label{ font-weight:bold; display:block; margin-top:15px; }
-input, select, textarea{ width:100%; padding:12px; margin-top:8px; border:1px solid #ccc; border-radius:6px; font-size:15px; box-sizing:border-box; }
-button{ width:100%; margin-top:25px; padding:14px; background:#0d6efd; color:white; border:none; border-radius:6px; font-size:18px; cursor:pointer; }
-</style>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Upload Resume | AI Resume Screening System</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eef3f8;
+        }
+
+        nav {
+            background: #0d6efd;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+        }
+
+        nav h2 {
+            margin: 0;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            margin-left: 20px;
+        }
+
+        .upload-container {
+            width: 650px;
+            max-width: 92%;
+            margin: 50px auto;
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,.15);
+        }
+
+        h1 {
+            text-align: center;
+            color: #0d6efd;
+        }
+
+        .description {
+            text-align: center;
+            color: #666;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 14px;
+            background: #0d6efd;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0958c7;
+        }
+
+        button:disabled {
+            background: #777;
+            cursor: not-allowed;
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+
+            nav {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            nav a {
+                margin-left: 10px;
+            }
+
+            .upload-container {
+                margin-top: 25px;
+                padding: 25px;
+            }
+
+        }
+
+    </style>
+
 </head>
+
+
 <body>
 
-<nav>
-<h2>AI Resume Screening</h2>
-<div>
-<a href="/dashboard">Dashboard</a>
-<a href="/logout">Logout</a>
-</div>
-</nav>
 
-<div class="upload-container">
-<h1>Upload Resume</h1>
-<p style="text-align:center;">Upload your resume and let AI analyze your profile.</p>
+    <!-- Navbar -->
 
-<form id="resumeForm">
+    <nav>
 
-<label>Full Name</label>
-<input type="text" name="name" placeholder="Enter Full Name" required>
+        <h2>AI Resume Screening</h2>
 
-<label>Email Address</label>
-<input type="email" name="email" placeholder="Enter Email" required>
+        <div>
 
-<label>Job Role</label>
-<select name="job_role">
-<option>Python Developer</option>
-<option>Java Developer</option>
-<option>Web Developer</option>
-<option>Software Engineer</option>
-<option>Data Analyst</option>
-<option>AI Engineer</option>
-</select>
+            <a href="dashboard.html">
+                Dashboard
+            </a>
 
-<label>Skills</label>
-<textarea name="skills" rows="3" placeholder="Example: Python, HTML, CSS, SQL"></textarea>
+            <a href="index.html">
+                Home
+            </a>
 
-<label>Job Description</label>
-<textarea name="job_description" rows="4" placeholder="Paste Job Description here..." required></textarea>
+        </div>
 
-<label>Select Resume</label>
-<input type="file" name="resume" accept=".pdf,.doc,.docx" required>
+    </nav>
 
-<button type="submit">📤 Analyze Resume</button>
 
-</form>
 
-</div> 
-  <button type="submit">📤 Analyze Resume</button>
+    <!-- Upload Form -->
 
-</form>
+    <div class="upload-container">
 
-</div>
+        <h1>Upload Resume</h1>
 
-<script type="module">
+        <p class="description">
+            Upload your resume and let AI analyze your profile.
+        </p>
 
-import { db } from "./firebase-config.js";
 
-import {
-  collection,
-  addDoc
-} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+        <form id="resumeForm">
 
-const form = document.getElementById("resumeForm");
 
-form.addEventListener("submit", async (e) => {
+            <!-- Name -->
 
-    e.preventDefault();
+            <label for="name">
+                Full Name
+            </label>
 
-    const data = {
-        name: form.name.value,
-        email: form.email.value,
-        job_role: form.job_role.value,
-        skills: form.skills.value,
-        job_description: form.job_description.value,
-        resume: form.resume.files[0] ? form.resume.files[0].name : "Not Uploaded",
-        createdAt: new Date()
-    };
+            <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Enter Full Name"
+                required
+            >
 
-    try {
 
-        await addDoc(collection(db, "resumes"), data);
 
-        alert("Resume Details Saved Successfully!");
+            <!-- Email -->
 
-        window.location.href = "result.html";
+            <label for="email">
+                Email Address
+            </label>
 
-    } catch (err) {
+            <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter Email"
+                required
+            >
 
-        alert("Error : " + err.message);
 
-    }
 
-});
+            <!-- Job Role -->
 
-</script>
+            <label for="job_role">
+                Job Role
+            </label>
+
+            <select
+                id="job_role"
+                name="job_role"
+                required
+            >
+
+                <option value="">
+                    Select Job Role
+                </option>
+
+                <option value="Python Developer">
+                    Python Developer
+                </option>
+
+                <option value="Java Developer">
+                    Java Developer
+                </option>
+
+                <option value="Web Developer">
+                    Web Developer
+                </option>
+
+                <option value="Software Engineer">
+                    Software Engineer
+                </option>
+
+                <option value="Data Analyst">
+                    Data Analyst
+                </option>
+
+                <option value="AI Engineer">
+                    AI Engineer
+                </option>
+
+            </select>
+
+
+
+            <!-- Skills -->
+
+            <label for="skills">
+                Skills
+            </label>
+
+            <textarea
+                id="skills"
+                name="skills"
+                rows="3"
+                placeholder="Example: Python, HTML, CSS, SQL"
+                required
+            ></textarea>
+
+
+
+            <!-- Job Description -->
+
+            <label for="job_description">
+                Job Description
+            </label>
+
+            <textarea
+                id="job_description"
+                name="job_description"
+                rows="4"
+                placeholder="Paste Job Description here..."
+                required
+            ></textarea>
+
+
+
+            <!-- Resume -->
+
+            <label for="resume">
+                Select Resume
+            </label>
+
+            <input
+                type="file"
+                id="resume"
+                name="resume"
+                accept=".pdf,.doc,.docx"
+                required
+            >
+
+
+
+            <!-- Submit -->
+
+            <button
+                type="submit"
+                id="submitBtn"
+            >
+                📤 Analyze Resume
+            </button>
+
+
+        </form>
+
+
+        <div id="message"></div>
+
+    </div>
+
+
+
+    <!-- Firebase -->
+
+    <script type="module">
+
+        import { db } from "./firebase-config.js";
+
+        import {
+            collection,
+            addDoc,
+            serverTimestamp
+        }
+        from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+
+
+        const form =
+            document.getElementById("resumeForm");
+
+        const submitBtn =
+            document.getElementById("submitBtn");
+
+        const message =
+            document.getElementById("message");
+
+
+        form.addEventListener("submit", async function(e) {
+
+            e.preventDefault();
+
+
+            // Disable button
+            submitBtn.disabled = true;
+
+            submitBtn.innerText =
+                "Saving Resume...";
+
+
+            message.innerText = "";
+
+
+            try {
+
+
+                // Get form values
+
+                const name =
+                    document.getElementById("name").value.trim();
+
+                const email =
+                    document.getElementById("email").value.trim();
+
+                const jobRole =
+                    document.getElementById("job_role").value;
+
+                const skills =
+                    document.getElementById("skills").value.trim();
+
+                const jobDescription =
+                    document.getElementById("job_description").value.trim();
+
+                const resumeFile =
+                    document.getElementById("resume").files[0];
+
+
+                // Check resume
+
+                if (!resumeFile) {
+
+                    throw new Error(
+                        "Please select your resume."
+                    );
+
+                }
+
+
+                // Data to Firestore
+
+                const resumeData = {
+
+                    name: name,
+
+                    email: email,
+
+                    job_role: jobRole,
+
+                    skills: skills,
+
+                    job_description: jobDescription,
+
+                    resume:
+                        resumeFile.name,
+
+                    matchScore: 0,
+
+                    createdAt:
+                        serverTimestamp()
+
+                };
+
+
+                // IMPORTANT:
+                // addDoc creates a NEW document every time
+
+                const docRef =
+                    await addDoc(
+                        collection(db, "resumes"),
+                        resumeData
+                    );
+
+
+                console.log(
+                    "Resume saved with ID:",
+                    docRef.id
+                );
+
+
+                message.style.color =
+                    "green";
+
+                message.innerText =
+                    "✅ Resume saved successfully!";
+
+
+                alert(
+                    "Resume Details Saved Successfully!"
+                );
+
+
+                // Clear form
+
+                form.reset();
+
+
+                // Go to candidates page
+
+                setTimeout(function() {
+
+                    window.location.href =
+                        "candidates.html";
+
+                }, 500);
+
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Firestore Error:",
+                    error
+                );
+
+
+                message.style.color =
+                    "red";
+
+                message.innerText =
+                    "❌ Error: " +
+                    error.message;
+
+
+                submitBtn.disabled = false;
+
+                submitBtn.innerText =
+                    "📤 Analyze Resume";
+
+            }
+
+        });
+
+    </script>
+
 
 </body>
-</html>
-</body>
+
 </html>
